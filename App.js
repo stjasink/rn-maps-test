@@ -1,12 +1,42 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
 
 function App() {
-  return <MyMap useCustomMarkers={true} />;
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{title: 'Home Screen'}}
+        />
+        <Stack.Screen
+          name="MyMap"
+          component={MyMap}
+          options={{title: 'My Map'}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
-function MyMap({useCustomMarkers}) {
+function Home({navigation}) {
+  return (
+    <View>
+      <Text>Welcome to the home screen</Text>
+      <Pressable onPress={() => navigation.navigate('MyMap')}>
+        <Text>Press here for the map</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function MyMap() {
   return (
     <View style={styles.container}>
       <MapView
@@ -20,34 +50,22 @@ function MyMap({useCustomMarkers}) {
         showsMyLocationButton={false}
         minZoomLevel={16}
         maxZoomLevel={22}>
-        <MyMapMarkers useCustomMarkers={useCustomMarkers} />
+        <MyMapMarkers />
       </MapView>
     </View>
   );
 }
 
-function MyMapMarkers({useCustomMarkers}) {
-  return markerLocations.map((location, markerNum) =>
-    useCustomMarkers ? <Marker
-        key={'marker' + markerNum}
-        coordinate={{latitude: location.lat, longitude: location.lng}}
-        zIndex={markerNum}
-        trackViewChanges={false}>
-        <View style={styles.markerContainer}>
-          <View style={styles.marker}>
-            <Text style={styles.markerText}>{markerNum}</Text>
-          </View>
-          <View style={styles.markerPin} />
-        </View>
-      </Marker> :
-      <Marker
-        key={'marker' + markerNum}
-        coordinate={{latitude: location.lat, longitude: location.lng}}
-        zIndex={markerNum}
-        pinColor={'green'}
-        trackViewChanges={false}
-      />
-  );
+function MyMapMarkers() {
+  return markerLocations.map((location, markerNum) => (
+    <Marker
+      key={'marker' + markerNum}
+      coordinate={{latitude: location.lat, longitude: location.lng}}
+      zIndex={markerNum}
+      pinColor={'green'}
+      trackViewChanges={false}
+    />
+  ));
 }
 
 const styles = StyleSheet.create({
@@ -58,26 +76,6 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-  },
-  markerContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  marker: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 5,
-    borderWidth: 3,
-    borderColor: 'green',
-  },
-  markerPin: {
-    width: 3,
-    height: 5,
-    backgroundColor: 'green',
-  },
-  markerText: {
-    fontWeight: 'bold',
-    color: 'black',
   },
 });
 
@@ -96,70 +94,6 @@ const markerLocations = [
   {
     lat: 51.585365,
     lng: -0.150182,
-  },
-  {
-    lat: 51.584366,
-    lng: -0.14934,
-  },
-  {
-    lat: 51.584112,
-    lng: -0.14893,
-  },
-  {
-    lat: 51.583913,
-    lng: -0.148976,
-  },
-  {
-    lat: 51.582766,
-    lng: -0.148754,
-  },
-  {
-    lat: 51.581715,
-    lng: -0.149121,
-  },
-  {
-    lat: 51.58113,
-    lng: -0.148623,
-  },
-  {
-    lat: 51.579808,
-    lng: -0.149114,
-  },
-  {
-    lat: 51.585623,
-    lng: -0.150089,
-  },
-  {
-    lat: 51.585319,
-    lng: -0.149529,
-  },
-  {
-    lat: 51.584418,
-    lng: -0.14897,
-  },
-  {
-    lat: 51.584068,
-    lng: -0.148902,
-  },
-  {
-    lat: 51.583705,
-    lng: -0.148558,
-  },
-  {
-    lat: 51.582616,
-    lng: -0.148923,
-  },
-  {
-    lat: 51.581435,
-    lng: -0.149005,
-  },
-  {
-    lat: 51.580887,
-    lng: -0.148784,
-  },
-  {
-    lat: 51.579779,
-    lng: -0.149297,
   },
 ];
 
